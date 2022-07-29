@@ -1,0 +1,18 @@
+html,body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+div#container {
+    display: flex;
+}
+
+div#note {
+    display: none;
+}
+
+div#map {
+    width: 100%;
+    height: 100vh;
+}
