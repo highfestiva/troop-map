@@ -43,11 +43,11 @@
     map.addLayer(new grid());
 
     let popup = L.popup();
-    function onMapClick(e) {
-      var msg = "Zoom in further to place troops";
+    function onClick(e) {
+      var msg = '<div class="errTxt">You need to zoom in further to place troops!</div>';
       if (e.target._zoom >= 14) {
         $("#note").show();
-        msg = "Enemies spotted here. Place your marker as accurately as possible.";
+        msg = "You spotted enemies here. Place your marker as accurately as possible, then fill in the form.";
       }
       popup
         .setLatLng(e.latlng)
@@ -61,7 +61,15 @@
       });
       L.marker(e.latlng, {icon: soldierIcon}).addTo(map);*/
     }
-    map.on('click', onMapClick);
+    function onZoom(e) {
+      popup.close();
+    }
+    function onCloseMarker(e) {
+      $("#note").hide();
+    }
+    map.on('click', onClick);
+    map.on('zoomstart', onZoom);
+    map.on('popupclose', onCloseMarker);
   </script>
 </body>   
 </html>
