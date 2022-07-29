@@ -9,18 +9,20 @@
   <script src="https://unpkg.com/zepto@1.2.0/dist/zepto.min.js" crossorigin=""></script>
 </head>
 <body>
-  <div id="container">
-    <div id="map"></div>
-    <div id="note">
-      <form>
-        <p>Type</p>
-        <p>Number of units</p>
-        <p>Heading</p>
-        <p>Notes</p>
-        <input type="submit"></input>
-        <button>Cancel</button>
-      </form>
-    </div>
+  <div id="map"></div>
+  <div id="report-template">
+    <form class="report">
+      <p>You spotted enemy here.</p>
+      <p>Place your marker as accurately as possible, then fill in the form.</p>
+      <p>Type</p>
+      <p>Number of units</p>
+      <p>Heading</p>
+      <p>Notes</p>
+      <input type="submit"></input>
+    </form>
+  </div>
+  <div id="err-template">
+    <p class="errTxt">You need to zoom in further to place troops!</p>
   </div>
   <script>
     let layer = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -43,11 +45,15 @@
     map.addLayer(new grid());
 
     let popup = L.popup();
+    var hideTimeoutId = null;
     function onClick(e) {
-      var msg = '<div class="errTxt">You need to zoom in further to place troops!</div>';
+      var msg = $('#err-template').html();
       if (e.target._zoom >= 14) {
-        $("#note").show();
-        msg = "You spotted enemies here. Place your marker as accurately as possible, then fill in the form.";
+        if (hideTimeoutId !== null) {
+          clearTimeout(hideTimeoutId);
+          hideTimeoutId = null;
+        }
+        msg = $('#report-template').html();
       }
       popup
         .setLatLng(e.latlng)
@@ -61,15 +67,7 @@
       });
       L.marker(e.latlng, {icon: soldierIcon}).addTo(map);*/
     }
-    function onZoom(e) {
-      popup.close();
-    }
-    function onCloseMarker(e) {
-      $("#note").hide();
-    }
     map.on('click', onClick);
-    map.on('zoomstart', onZoom);
-    map.on('popupclose', onCloseMarker);
   </script>
 </body>   
 </html>
