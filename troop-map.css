@@ -13,6 +13,74 @@ div#report-template {
     display: none;
 }
 
-.errTxt {
+#err-template {
+	display: none;
+}
+
+span.option-unit {
+    vertical-align: middle;
+}
+
+img.option-unit-type {
+	width: 2em;
+    height: 2em;
+    vertical-align: middle;
+	position: relative;
+    top: -1px;
+	margin: -3px 5px -3px 0;
+}
+
+#unit-type {
+	width: 100%;
+}
+
+input, select, textarea {
+	width: 100%;
+	background-color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    height: 28px;
+    box-sizing: border-box;
+    padding: 0 7px;
+}
+
+textarea {
+	height: 70px;
+    font-family: Arial;
+    padding: 4px;
+}
+
+input[type="submit"] {
+	border: 2px solid #444;
+    font-weight: bold;
+}
+
+.info-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.info {
+	width: 100%;
+}
+
+.small {
+	width: 45%;
+	margin-right: 10%;
+}
+
+.end {
+	margin-right: 0;
+}
+
+.info p {
+	margin: 14px 3px 2px 3px;
+}
+
+.errTxt, .error {
     color: #f00;
 }

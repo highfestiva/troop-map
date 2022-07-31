@@ -4,27 +4,72 @@
   <title>Russian troop movement self-reporting map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
   <link rel="stylesheet" href="troop-map.css" />
   <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
-  <script src="https://unpkg.com/zepto@1.2.0/dist/zepto.min.js" crossorigin=""></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 </head>
 <body>
   <div id="map"></div>
   <div id="report-template">
-    <form class="report">
-      <p>You spotted enemy here.</p>
-      <p>Place your marker as accurately as possible, then fill in the form.</p>
-      <p>Type</p>
-      <p>Number of units</p>
-      <p>Heading</p>
-      <p>Notes</p>
-      <input type="submit"></input>
+    <form id="report-form-template" class="report" action="report" method="POST">
+      <h3>Ememy spotted</h3>
+      <p>Place your marker as accurately as possible!</p>
+      <div class="info-container">
+        <div class="info">
+          <p>Unit type</p>
+          <select id="unit-type-template" name="unitType">
+            <option value='infantry'>Infantry</option>
+            <option value='guerilla'>Guerilla</option>
+            <option value='paratrooper'>Paratrooper</option>
+            <option value='artillery'>Artillery</option>
+            <option value='tank'>Tank</option>
+            <option value='combat-vehicle'>Combat vehicle</option>
+            <option value='vehicle'>Vehicle</option>
+            <option value='other'>Other</option>
+          </select>
+        </div>
+        <div class="info small">
+          <p>Number of units</p>
+          <input id="num-units-template" name="numUnits" type="number" value="0" />
+        </div>
+        <div class="info small end">
+          <p>Minutes ago</p>
+          <input id="mins-ago-template" name="minsAgo" type="number" value="5" />
+        </div>
+        <div class="info">
+          <p>Heading</p>
+          <select id="heading-template" name="heading">
+            <option value='unknown'>Unknown</option>
+            <option value='still'>Standing still</option>
+            <option value='north'>North</option>
+            <option value='south'>South</option>
+            <option value='east'>East</option>
+            <option value='west'>West</option>
+          </select>
+        </div>
+        <div class="info">
+          <p>Notes</p>
+          <textarea id="notes-template" name="notes"></textarea>
+        </div>
+        <div class="info">
+          <p></p>
+          <input type="submit" value="Submit"></input>
+        </div>
+      </div>
     </form>
   </div>
   <div id="err-template">
     <p class="errTxt">You need to zoom in further to place troops!</p>
   </div>
   <script>
+    function formatState(state) {
+      if (!state.id) { return state.text; }
+      return $('<span class="option-unit"><img class="option-unit-type" src="img/' + state.element.value + '.png" /> ' + state.text + '</span>');
+    }
+
     let layer = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OpenStreetMap'
     });
@@ -39,7 +84,8 @@
     let map = new L.map('map', {
       center: [48, 36.5],
       zoom: 7,
-      layers: [layer]
+      layers: [layer],
+      zoomControl: false
     });
 
     map.addLayer(new grid());
@@ -54,13 +100,29 @@
           hideTimeoutId = null;
         }
         msg = $('#report-template').html();
+        msg = msg.replace(/-template/g, '');
       }
       popup
         .setLatLng(e.latlng)
         .setContent(msg)
         .openOn(map);
+      $("#unit-type").select2({ templateResult: formatState, minimumResultsForSearch: 20 });
+      $("#report-form").validate({
+          rules: {
+              numUnits: {
+                  min: {
+                      param: 1
+                  }
+              },
+              minsAgo: {
+                  min: {
+                      param: 1
+                  }
+              }
+          }
+      });
       /*var soldierIcon = L.icon({
-        iconUrl:      'soldier.png',
+        iconUrl:      'img/infantry.png',
         iconSize:     [64, 64],
         iconAnchor:   [32, 32],
         popupAnchor:  [0,   0]
