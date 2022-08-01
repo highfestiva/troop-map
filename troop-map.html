@@ -14,7 +14,7 @@
 <body>
   <div id="map"></div>
   <div id="report-template">
-    <form id="report-form-template" class="report" action="report" method="POST">
+    <form id="report-form-template" class="report">
       <h3>Ememy spotted</h3>
       <p>Place your marker as accurately as possible!</p>
       <div class="info-container">
@@ -31,27 +31,18 @@
             <option value='other'>Other</option>
           </select>
         </div>
-        <div class="info small">
-          <p>Number of units</p>
-          <input id="num-units-template" name="numUnits" type="number" value="0" />
-        </div>
-        <div class="info small end">
-          <p>Minutes ago</p>
-          <input id="mins-ago-template" name="minsAgo" type="number" value="5" />
-        </div>
-        <div class="info">
-          <p>Heading</p>
-          <select id="heading-template" name="heading">
-            <option value='unknown'>Unknown</option>
-            <option value='still'>Standing still</option>
-            <option value='north'>North</option>
-            <option value='south'>South</option>
-            <option value='east'>East</option>
-            <option value='west'>West</option>
-          </select>
+        <div class="info info-container">
+          <div class="small">
+            <p>Number of units</p>
+            <input id="num-units-template" name="numUnits" type="number" value="0" />
+          </div>
+          <div class="small end">
+            <p>Minutes ago</p>
+            <input id="mins-ago-template" name="minsAgo" type="number" value="5" />
+          </div>
         </div>
         <div class="info">
-          <p>Notes</p>
+          <p>Heading, speed, activity, notes</p>
           <textarea id="notes-template" name="notes"></textarea>
         </div>
         <div class="info">
@@ -94,7 +85,7 @@
     var hideTimeoutId = null;
     function onClick(e) {
       var msg = $('#err-template').html();
-      if (e.target._zoom >= 14) {
+      if (e.target._zoom >= 2){//14) {
         if (hideTimeoutId !== null) {
           clearTimeout(hideTimeoutId);
           hideTimeoutId = null;
@@ -119,6 +110,13 @@
                       param: 1
                   }
               }
+          },
+          errorPlacement: function(error, element) {
+              element.parents('div.info').after(error);
+          },
+          submitHandler: function() {
+              popup.close();
+              $.post('report', $('#report-form').serialize());
           }
       });
       /*var soldierIcon = L.icon({
