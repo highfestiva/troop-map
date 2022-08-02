@@ -61,6 +61,26 @@
       return $('<span class="option-unit"><img class="option-unit-type" src="img/' + state.element.value + '.png" /> ' + state.text + '</span>');
     }
 
+    function validateForm() {
+      $("#report-form").validate({
+        rules: {
+          numUnits: { required: true, number: true, min: 1, minlength: 1 },
+          minsAgo: { required: true, number: true, min: '0', minlength: 1 },
+        },
+        messages: {
+          numUnits: "How many did you see?",
+          minsAgo: "How long time ago was this?",
+        },
+        errorPlacement: function(error, element) {
+            element.parents('div.info').after(error);
+        },
+        submitHandler: function() {
+            popup.close();
+            $.post('report', $('#report-form').serialize());
+        }
+      });
+    }
+
     let layer = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OpenStreetMap'
     });
@@ -97,28 +117,8 @@
         .setLatLng(e.latlng)
         .setContent(msg)
         .openOn(map);
-      $("#unit-type").select2({ templateResult: formatState, minimumResultsForSearch: 20 });
-      $("#report-form").validate({
-          rules: {
-              numUnits: {
-                  min: {
-                      param: 1
-                  }
-              },
-              minsAgo: {
-                  min: {
-                      param: 1
-                  }
-              }
-          },
-          errorPlacement: function(error, element) {
-              element.parents('div.info').after(error);
-          },
-          submitHandler: function() {
-              popup.close();
-              $.post('report', $('#report-form').serialize());
-          }
-      });
+      $('#unit-type').select2({ templateResult: formatState, minimumResultsForSearch: 20 });
+      validateForm();
       /*var soldierIcon = L.icon({
         iconUrl:      'img/infantry.png',
         iconSize:     [64, 64],

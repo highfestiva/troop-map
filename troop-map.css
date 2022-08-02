@@ -83,4 +83,13 @@ input[type="submit"] {
 
 .errTxt, .error {
     color: #f00;
+    border-color: #f00;
+}
+
+label {
+    width: 100%;
+}
+
+#mins-ago-error {
+    text-align: right;
 }
