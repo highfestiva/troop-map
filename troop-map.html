@@ -13,49 +13,70 @@
 </head>
 <body>
   <div id="map"></div>
-  <div id="report-template">
+  <div id="report-template" class="template">
     <form id="report-form-template" class="report">
-      <h3>Ememy spotted</h3>
-      <p>Place your marker as accurately as possible!</p>
+      <h3 class="xlat">Ememy spotted</h3>
+      <p class="xlat">Place your marker as accurately as possible!</p>
       <div class="info-container">
         <div class="info">
-          <p>Unit type</p>
+          <p class="xlat">Unit type</p>
           <select id="unit-type-template" name="unitType">
-            <option value='infantry'>Infantry</option>
-            <option value='guerilla'>Guerilla</option>
-            <option value='paratrooper'>Paratrooper</option>
-            <option value='artillery'>Artillery</option>
-            <option value='tank'>Tank</option>
-            <option value='combat-vehicle'>Combat vehicle</option>
-            <option value='vehicle'>Vehicle</option>
-            <option value='other'>Other</option>
+            <option value='infantry' class="xlat">Infantry</option>
+            <option value='guerilla' class="xlat">Guerilla</option>
+            <option value='paratrooper' class="xlat">Paratrooper</option>
+            <option value='artillery' class="xlat">Artillery</option>
+            <option value='tank' class="xlat">Tank</option>
+            <option value='combat-vehicle' class="xlat">Combat vehicle</option>
+            <option value='vehicle' class="xlat">Vehicle</option>
+            <option value='other' class="xlat">Other</option>
           </select>
         </div>
         <div class="info info-container">
           <div class="small">
-            <p>Number of units</p>
+            <p class="xlat">Number of units</p>
             <input id="num-units-template" name="numUnits" type="number" value="0" />
           </div>
           <div class="small end">
-            <p>Minutes ago</p>
+            <p class="xlat">Minutes ago</p>
             <input id="mins-ago-template" name="minsAgo" type="number" value="5" />
           </div>
         </div>
         <div class="info">
-          <p>Heading, speed, activity, notes</p>
+          <p class="xlat">Heading, speed, activity, notes</p>
           <textarea id="notes-template" name="notes"></textarea>
         </div>
         <div class="info">
           <p></p>
-          <input type="submit" value="Submit"></input>
+          <input type="submit" value="Submit" class="xlat"></input>
         </div>
       </div>
     </form>
   </div>
-  <div id="err-template">
+  <div id="err-template template xlat">
     <p class="errTxt">You need to zoom in further to place troops!</p>
   </div>
+  <p id="how-many" class="template xlat">How many did you see?<p>
+  <p id="how-long-time" class="template xlat">How long time ago was this?<p>
   <script>
+    function xlat() {
+      dict = {
+        'Ememy spotted' : {
+          'sv': 'Fiende siktad',
+        },
+        'Submit': {
+          'sv': 'Skicka'
+        }
+      };
+      $(".xlat").each(function() {
+        let text = $(this).text();
+        let key = text || $(this).val();
+        let o = dict[key];
+        let lang = (navigator.language || navigator.userLanguage).replace(/-.*/, '');
+        let s = o && o[lang] || key;
+        text ? $(this).text(s) : $(this).val(s);
+      });
+    }
+    xlat();
     function formatState(state) {
       if (!state.id) { return state.text; }
       return $('<span class="option-unit"><img class="option-unit-type" src="img/' + state.element.value + '.png" /> ' + state.text + '</span>');
@@ -68,8 +89,8 @@
           minsAgo: { required: true, number: true, min: '0', minlength: 1 },
         },
         messages: {
-          numUnits: "How many did you see?",
-          minsAgo: "How long time ago was this?",
+          numUnits: $('#how-many').text(),
+          minsAgo: $('#how-long-time').text(),
         },
         errorPlacement: function(error, element) {
             element.parents('div.info').after(error);
@@ -111,7 +132,7 @@
           hideTimeoutId = null;
         }
         msg = $('#report-template').html();
-        msg = msg.replace(/-template/g, '');
+        msg = msg.replace(/-template/g, '').replace(/template/g, '');
       }
       popup
         .setLatLng(e.latlng)

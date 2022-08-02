@@ -9,12 +9,8 @@ div#map {
     height: 100vh;
 }
 
-div#report-template {
+#template, .template {
     display: none;
-}
-
-#err-template {
-	display: none;
 }
 
 span.option-unit {
