@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="http-equiv" content="Content-type: text/html; charset=UTF-8"/>
   <title>Russian troop movement self-reporting map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
@@ -10,12 +11,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="xlat.js" charset="UTF-8"></script>
 </head>
 <body>
   <div id="map"></div>
   <div id="report-template" class="template">
     <form id="report-form-template" class="report">
-      <h3 class="xlat">Ememy spotted</h3>
+      <h3 class="xlat">Enemy spotted</h3>
       <p class="xlat">Place your marker as accurately as possible!</p>
       <div class="info-container">
         <div class="info">
@@ -52,30 +54,12 @@
       </div>
     </form>
   </div>
-  <div id="err-template template xlat">
-    <p class="errTxt">You need to zoom in further to place troops!</p>
+  <div id="err-template template">
+    <p class="errTxt xlat">You need to zoom in further to place troops!</p>
   </div>
   <p id="how-many" class="template xlat">How many did you see?<p>
   <p id="how-long-time" class="template xlat">How long time ago was this?<p>
   <script>
-    function xlat() {
-      dict = {
-        'Ememy spotted' : {
-          'sv': 'Fiende siktad',
-        },
-        'Submit': {
-          'sv': 'Skicka'
-        }
-      };
-      $(".xlat").each(function() {
-        let text = $(this).text();
-        let key = text || $(this).val();
-        let o = dict[key];
-        let lang = (navigator.language || navigator.userLanguage).replace(/-.*/, '');
-        let s = o && o[lang] || key;
-        text ? $(this).text(s) : $(this).val(s);
-      });
-    }
     xlat();
     function formatState(state) {
       if (!state.id) { return state.text; }
