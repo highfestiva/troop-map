@@ -56,11 +56,13 @@
       </div>
     </form>
   </div>
-  <div id="err-template template">
+  <div id="err-template" class="template">
     <p class="errTxt xlat">You need to zoom in further to place troops!</p>
   </div>
-  <p id="how-many" class="template xlat">How many did you see?<p>
-  <p id="how-long-time" class="template xlat">How long time ago was this?<p>
+  <div class="hidden-nospace template">
+    <p id="how-many" class="template xlat">How many did you see?<p>
+    <p id="how-long-time" class="template xlat">How long time ago was this?<p>
+  </div>
   <script>
     xlat();
     function formatState(state) {
