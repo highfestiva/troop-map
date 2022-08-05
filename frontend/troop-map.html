@@ -20,6 +20,8 @@
       <h3 class="xlat">Enemy spotted</h3>
       <p class="xlat">Place your marker as accurately as possible!</p>
       <div class="info-container">
+        <input id="lat-template" name="lat" type="hidden" />
+        <input id="lng-template" name="lng" type="hidden" />
         <div class="info">
           <p class="xlat">Unit type</p>
           <select id="unit-type-template" name="unitType">
@@ -45,7 +47,7 @@
         </div>
         <div class="info">
           <p class="xlat">Heading, speed, activity, notes</p>
-          <textarea id="notes-template" name="notes"></textarea>
+          <textarea id="notes-template" name="notes" maxlength="140"></textarea>
         </div>
         <div class="info">
           <p></p>
@@ -66,6 +68,11 @@
       return $('<span class="option-unit"><img class="option-unit-type" src="img/' + state.element.value + '.png" /> ' + state.text + '</span>');
     }
 
+    function updateLatLng(latlng) {
+      $('#lat').val(latlng['lat']);
+      $('#lng').val(latlng['lng']);
+    }
+
     function validateForm() {
       $("#report-form").validate({
         rules: {
@@ -81,9 +88,27 @@
         },
         submitHandler: function() {
             popup.close();
-            $.post('report', $('#report-form').serialize());
+            $.post('report-troops', $('#report-form').serialize(), placeTroop);
         }
       });
+    }
+
+    const troopShortToLong = {'i':'infantry', 'g':'guerilla', 'p':'paratrooper', 'a':'artillery', 't':'tank', 'c':'combat-vehicle', 'v':'vehicle', 'o':'other'}
+
+    function placeTroop(troop) {
+      var troopIcon = L.icon({
+        iconUrl:      'img/' + troopShortToLong[troop.u] + '.png',
+        iconSize:     [64, 64],
+        iconAnchor:   [32, 32],
+        popupAnchor:  [0,   0]
+      });
+      L.marker({'lat': troop.y, 'lng': troop.x}, {icon: troopIcon}).addTo(map);
+    }
+
+    function loadReports() {
+        $.get('load-troops?minsAgo=10080', data => {
+            data.troops.forEach(placeTroop);
+        });
     }
 
     let layer = new L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -122,6 +147,7 @@
         .setLatLng(e.latlng)
         .setContent(msg)
         .openOn(map);
+      updateLatLng(e.latlng);
       $('#unit-type').select2({ templateResult: formatState, minimumResultsForSearch: 20 });
       validateForm();
       /*var soldierIcon = L.icon({
@@ -133,6 +159,7 @@
       L.marker(e.latlng, {icon: soldierIcon}).addTo(map);*/
     }
     map.on('click', onClick);
+    loadReports();
   </script>
 </body>   
 </html>
