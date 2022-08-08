@@ -33,9 +33,12 @@ words = ( 'aaa','aah','aas','aba','abc','abs','aby','acc','ace','act','ada','add
           'trf','try','tsk','tss','tub','tug','tum','tun','tup','tut','tux','two','tyr','uca','ufo','uke','ull','ult','ump','UNI','uns','ups','urd','urn','urs','usa','use','uta','ute',
           'uts','utu','vac','van','var','vas','vat','veg','vet','vex','via','vie','vii','vim','vip','vow','vox','wac','wad','wag','wan','war','waw','wax','way','web','wed','wee','wei',
           'wen','wet','who','why','wig','win','wit','wiz','woe','wog','wok','won','woo','wop','wow','wpm','wry','wye','xcl','xii','xiv','xix','xvi','xxi','xxv','xxx','yak','yam','yap',
-          'yaw','yay','yea','yen','yes','yet','yew','yid','yin','yip','yis','yob','yon','you','zag','zap','zea','zed','zee','zen','zep','zig','zip','zit','zoo' )
-
-words_length = len(words)
+          'yaw','yay','yea','yen','yes','yet','yew','yid','yin','yip','yis','yob','yon','you','zag','zap','zea','zed','zee','zen','zep','zig','zip','zit','zoo','b2b','cfg','cgi','css',
+          'csv','gpl','jit','mmx','p2p','pid','pnp','ppp','rle','rtc','ssd','uml','aye','yo','a','sheep','eats','some','food','sometimes','sandwich','others','dump','boar','jelly',
+          'ai','twiddle','thumb','maniac','frantic','happy','joyful','giddy','true','false','bent','thick','thicc','think','basic','epic','elite','goat','salty','savage','groovy',
+          'hand','dude','dudester','grand','ball','sick','cool','swag','dough','bear','beer','deer','moose','salmon','crow','crayon','space','lore','geek','nerd','super','on','rare',
+          'seldom','potato','neat','nuts','cheese','deep','icky','stump','seven','nation','army','ftw','ditch','guts','goof','hustle','grub','crap','whiz','of','up','down','near',
+          'behind','glory','to','ukraine' )
 
 email_regex = re_compile('^[a-z0-9.!#$%&’*+/=?^_`{|}~-]+@([a-z0-9-]{2,30}\.)+[a-z]{2,3}$')
 
@@ -47,7 +50,7 @@ def hash(s):
         q = 0
         for j in range(2):
             q = q*256 + h[i*2+j]
-        p.append(q % words_length)
+        p.append(q & 0x3ff)
     return '-'.join([words[q] for q in p])
 
 
