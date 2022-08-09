@@ -9,6 +9,28 @@ div#map {
     height: 100vh;
 }
 
+div#hamburger {
+    width: 2em;
+    height: 2em;
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    background-color: #fff;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+div#hamburger > span {
+    width: 90%;
+    height: 0.25em;
+    display: block;
+    background-color: #bbb;
+    border-radius: 0.2em;
+    margin: 0.3125em auto;
+}
+
 #template, .template {
     display: none;
 }
