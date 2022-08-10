@@ -31,6 +31,14 @@ div#hamburger > span {
     margin: 0.3125em auto;
 }
 
+ul#menu {
+    display: none;
+    position: fixed;
+    top: 1em;
+    right: 1em;
+    z-index: 1010;
+}
+
 #template, .template {
     display: none;
 }

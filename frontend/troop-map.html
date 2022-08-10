@@ -6,15 +6,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin="" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="troop-map.css" />
   <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="xlat.js" charset="UTF-8"></script>
 </head>
 <body>
   <div id="hamburger"><span></span><span></span><span></span></div>
+  <ul id="menu">
+    <li>
+      <div class="xlat">Invite friend</div>
+      <ul>
+        <li><div class="xlat">Type in email address</div></li>
+        <li><div class="xlat">Via Gmail contacts</div></li>
+      </ul>
+    </li>
+    <li><div class="xlat">Report user</div></li>
+  </ul>
   <div id="map"></div>
   <div id="report-template" class="template">
     <form id="report-form-template" class="report">
@@ -96,6 +108,19 @@
       });
     }
 
+    function onMenuSelect(event, ui) {
+      console.log(event, ui);
+      $('#menu').toggle();
+    }
+
+    function onClickHamburger() {
+      popup.close();
+      $('#menu').toggle();
+      $('#menu').menu({
+          select: onMenuSelect
+      });
+    }
+
     const troopShortToLong = {'i':'infantry', 'g':'guerilla', 'p':'paratrooper', 'a':'artillery', 't':'tank', 'c':'combat-vehicle', 'v':'vehicle', 'o':'other'}
 
     function placeTroop(troop) {
@@ -136,7 +161,8 @@
 
     let popup = L.popup();
     var hideTimeoutId = null;
-    function onClick(e) {
+    function onClickMap(e) {
+      $('#menu').hide();
       var msg = $('#err-template').html();
       if (e.target._zoom >= 2){//14) {
         if (hideTimeoutId !== null) {
@@ -152,6 +178,7 @@
         .openOn(map);
       updateLatLng(e.latlng);
       $('#unit-type').select2({ templateResult: formatState, minimumResultsForSearch: 20 });
+      //$('#report input').change(storeChange);
       validateForm();
       /*var soldierIcon = L.icon({
         iconUrl:      'img/infantry.png',
@@ -161,7 +188,12 @@
       });
       L.marker(e.latlng, {icon: soldierIcon}).addTo(map);*/
     }
-    map.on('click', onClick);
+    function onMove(e) {
+      $('#menu').hide();
+    }
+    map.on('click', onClickMap);
+    map.on('movestart zoomstart', onMove);
+    $('#hamburger').click(onClickHamburger);
     loadReports();
   </script>
 </body>   
