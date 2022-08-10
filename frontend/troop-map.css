@@ -2,6 +2,7 @@ html,body {
     margin: 0;
     padding: 0;
     border: 0;
+    font-size: 0.9em;
 }
 
 div#map {
@@ -34,9 +35,13 @@ div#hamburger > span {
 ul#menu {
     display: none;
     position: fixed;
-    top: 1em;
-    right: 1em;
     z-index: 1010;
+    padding: 0.5em 0;
+}
+
+ul.ui-menu div.ui-menu-item-wrapper {
+    padding-left: 2em;
+    padding-right: 2em;
 }
 
 #template, .template {

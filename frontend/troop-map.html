@@ -18,14 +18,12 @@
 <body>
   <div id="hamburger"><span></span><span></span><span></span></div>
   <ul id="menu">
-    <li>
-      <div class="xlat">Invite friend</div>
-      <ul>
-        <li><div class="xlat">Type in email address</div></li>
-        <li><div class="xlat">Via Gmail contacts</div></li>
-      </ul>
-    </li>
+    <li><div class="xlat">Invite friend via email</div></li>
+    <li><div class="xlat">Invite friend via Gmail contacts</div></li>
+    <div></div>
     <li><div class="xlat">Report user</div></li>
+    <div></div>
+    <li><div class="xlat">Settings</div></li>
   </ul>
   <div id="map"></div>
   <div id="report-template" class="template">
@@ -113,12 +111,15 @@
       $('#menu').toggle();
     }
 
-    function onClickHamburger() {
+    function onClickHamburger(e) {
       popup.close();
+      console.log(e);
       $('#menu').toggle();
       $('#menu').menu({
           select: onMenuSelect
       });
+      let right = $('body').width() - e.clientX;
+      $('#menu').css({right: right + 1, top: e.clientY + 1});
     }
 
     const troopShortToLong = {'i':'infantry', 'g':'guerilla', 'p':'paratrooper', 'a':'artillery', 't':'tank', 'c':'combat-vehicle', 'v':'vehicle', 'o':'other'}
